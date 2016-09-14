@@ -1,0 +1,28 @@
+{
+  "name": "crypto-form",
+  "version": "1.0.0",
+  "description": "Draft for test form criptation data",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "webpack-dev-server"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/VRedondo/crypto-form.git"
+  },
+  "author": "Victor Redondo",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/VRedondo/crypto-form/issues"
+  },
+  "homepage": "https://github.com/VRedondo/crypto-form#readme",
+  "devDependencies": {
+    "crypto-js": "^3.1.6",
+    "eslint-loader": "^1.5.0",
+    "eslinter": "^3.2.1",
+    "jquery": "^3.1.0",
+    "webpack": "^1.13.2",
+    "webpack-dev-server": "^1.15.2"
+  }
+}
