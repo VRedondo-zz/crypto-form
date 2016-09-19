@@ -10149,9 +10149,10 @@
 	    if(formSelector !== undefined){
 	        if($(formSelector).length){
 	            this.xmlParamsDefault = "<RSAKeyValue><Modulus>xlIAW9ORaTQp7kapjSjQ6NyXYo11UdrHP+m2uXJTZotMomf5cpVgXjTuldt5JZGU+uhRkMsxECbdPnAFXikA/sLB66B5GtW2g/FXT4VmcvCAwgQalUOkX/WxPibiSnwzCONMVkd2WFf3HjPIL4dwLB19md4HP8pKqHa6CZjStg0=</Modulus><Exponent>AQAB</Exponent></RSAKeyValue>";
-	            this.domain = 'https://abbvie44.digitashealth.com/RSAListener?refinfo=';
+	            this.endpoint = 'https://abbvie44.digitashealth.com/RSAListener?refinfo=';
 	            this.encriptUrl = '';
 	            this.formSelector = formSelector;
+	            this.anchorTarget = $(this.formSelector+ ' [data-target="true"]');
 	            this.init();
 	        }else{
 	            throw Error('formSelector should be a valid ID selector');
@@ -10198,19 +10199,22 @@
 	}
 
 	EncryptForm.prototype.init = function(){
+	    var self = this,
+	        formInputs = $(self.formSelector+' input'),
+	        target = self.anchorTarget;
+
+	    // Builds initial empty url
+	    target.prop('href',self.endpoint+encodeURIComponent(self.Encrypt('||')));
 	    // ------------------------------------------------
 	    // Bindings
 	    // ------------------------------------------------
-	    var formInputs = $(this.formSelector+' input'),
-	        target = $(this.formSelector+ ' [data-target="true"]');
-	        self = this;
 	    formInputs.on('blur, change', function(){
 	        var formData = [];
 	        $.each(formInputs.toArray(), function(index, value){
 	            formData.push($(value).val());
 	        });
 	        var encodedURL = encodeURIComponent(self.Encrypt(formData.join('|')));
-	        target.prop('href',self.domain+encodedURL);
+	        target.prop('href',self.endpoint+encodedURL);
 	    });
 	}
 

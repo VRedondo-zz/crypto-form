@@ -1,6 +1,13 @@
 var $ = require("jquery");
-var EF = require("./EncryptForm");
+var encrypt = require("./EncryptJS");
 
 $(function(){
-    var encryptForm = new EF.EncryptForm('#bannerForm');
+    var encriptUrl = encrypt.getUrl();
+    $('#submitBtn').prop('href',encriptUrl);
+    $('input').on('blur, change', function(){
+        formData = $('#userName').val() + '|' + $('#userLastName').val() + '|' + $('#userEmail').val();
+        encriptUrl = encrypt.getUrl(formData);
+        $('#submitBtn').prop('href',encriptUrl);
+        $('#resultUrl').val(encriptUrl);
+    });
 });
