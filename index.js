@@ -53,10 +53,17 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var $ = __webpack_require__(2);
-	var EF = __webpack_require__(3);
+	var encrypt = __webpack_require__(3);
 
 	$(function(){
-	    var encryptForm = new EF.EncryptForm('#bannerForm');
+	    var encriptUrl = encrypt.getUrl();
+	    $('#submitBtn').prop('href',encriptUrl);
+	    $('input').on('blur, change', function(){
+	        formData = $('#userName').val() + '|' + $('#userLastName').val() + '|' + $('#userEmail').val();
+	        encriptUrl = encrypt.getUrl(formData);
+	        $('#submitBtn').prop('href',encriptUrl);
+	        $('#resultUrl').val(encriptUrl);
+	    });
 	});
 
 /***/ },
@@ -10145,81 +10152,60 @@
 
 	var $ = __webpack_require__(2);
 
-	function EncryptForm(formSelector){
-	    if(formSelector !== undefined){
-	        if($(formSelector).length){
-	            this.xmlParamsDefault = "<RSAKeyValue><Modulus>xlIAW9ORaTQp7kapjSjQ6NyXYo11UdrHP+m2uXJTZotMomf5cpVgXjTuldt5JZGU+uhRkMsxECbdPnAFXikA/sLB66B5GtW2g/FXT4VmcvCAwgQalUOkX/WxPibiSnwzCONMVkd2WFf3HjPIL4dwLB19md4HP8pKqHa6CZjStg0=</Modulus><Exponent>AQAB</Exponent></RSAKeyValue>";
-	            this.endpoint = 'https://abbvie44.digitashealth.com/RSAListener?refinfo=';
-	            this.encriptUrl = '';
-	            this.formSelector = formSelector;
-	            this.anchorTarget = $(this.formSelector+ ' [data-target="true"]');
-	            this.init();
-	        }else{
-	            throw Error('formSelector should be a valid ID selector');
-	        }
-	    }else{
-	        throw Error('formSelector should be defined');
+	exports.getUrl = (function(){
+	    function EncryptJS(){
+	        this.RSAKey = "<RSAKeyValue><Modulus>xlIAW9ORaTQp7kapjSjQ6NyXYo11UdrHP+m2uXJTZotMomf5cpVgXjTuldt5JZGU+uhRkMsxECbdPnAFXikA/sLB66B5GtW2g/FXT4VmcvCAwgQalUOkX/WxPibiSnwzCONMVkd2WFf3HjPIL4dwLB19md4HP8pKqHa6CZjStg0=</Modulus><Exponent>AQAB</Exponent></RSAKeyValue>";
+	        this.endpoint = 'https://abbvie44.digitashealth.com/RSAListener?refinfo=';
 	    }
-	}
 
-	EncryptForm.prototype.GetNewRsaProvider = function(dwKeySize) {
-	    // Create a new instance of RSACryptoServiceProvider.
-	    if (!dwKeySize) dwKeySize = 1024;
-	    return new System.Security.Cryptography.RSACryptoServiceProvider(dwKeySize);
-	}
+	    EncryptJS.prototype.GetNewRsaProvider = function(dwKeySize) {
+	        // Create a new instance of RSACryptoServiceProvider.
+	        if (!dwKeySize) dwKeySize = 1024;
+	        return new System.Security.Cryptography.RSACryptoServiceProvider(dwKeySize);
+	    }
 
-	EncryptForm.prototype.GetRsaKey = function() {
-	    // ------------------------------------------------
-	    // RSA Keys
-	    // ------------------------------------------------
-	    var rsa = this.GetNewRsaProvider();
-	    // Import parameters from xml.
-	    rsa.FromXmlString(this.xmlParamsDefault);
-	    // Export RSA key to RSAParameters and include:
-	    //    false - Only public key required for encryption.
-	    //    true  - Private key required for decryption.
-	    return rsa.ExportParameters(false);
-	}
+	    EncryptJS.prototype.GetRsaKey = function() {
+	        // ------------------------------------------------
+	        // RSA Keys
+	        // ------------------------------------------------
+	        var rsa = this.GetNewRsaProvider();
+	        // Import parameters from xml.
+	        rsa.FromXmlString(this.RSAKey);
+	        // Export RSA key to RSAParameters and include:
+	        //    false - Only public key required for encryption.
+	        //    true  - Private key required for decryption.
+	        return rsa.ExportParameters(false);
+	    }
 
-	EncryptForm.prototype.Encrypt = function(data) {
-	    var decryptedBytes = System.Text.Encoding.UTF8.GetBytes(data);
-	    var doOaepPadding = false;
-	    // ------------------------------------------------
-	    // Encrypt
-	    // ------------------------------------------------
-	    var rsa = this.GetNewRsaProvider();
-	    // Import the RSA Key information.
-	    rsa.ImportParameters(this.GetRsaKey(false));
-	    // Encrypt the passed byte array and specify OAEP padding.
-	    var encryptedBytes = rsa.Encrypt(decryptedBytes, doOaepPadding);
-	    var encryptedString = System.Convert.ToBase64String(encryptedBytes)
-	    // ------------------------------------------------
-	    // Display the encrypted data.
-	    return encryptedString;
-	}
+	    EncryptJS.prototype.Encrypt = function(data) {
+	        var decryptedBytes = System.Text.Encoding.UTF8.GetBytes(data);
+	        var doOaepPadding = false;
+	        // ------------------------------------------------
+	        // Encrypt
+	        // ------------------------------------------------
+	        var rsa = this.GetNewRsaProvider();
+	        // Import the RSA Key information.
+	        rsa.ImportParameters(this.GetRsaKey(false));
+	        // Encrypt the passed byte array and specify OAEP padding.
+	        var encryptedBytes = rsa.Encrypt(decryptedBytes, doOaepPadding);
+	        var encryptedString = System.Convert.ToBase64String(encryptedBytes)
+	        // ------------------------------------------------
+	        // Display the encrypted data.
+	        return encryptedString;
+	    }
 
-	EncryptForm.prototype.init = function(){
-	    var self = this,
-	        formInputs = $(self.formSelector+' input'),
-	        target = self.anchorTarget;
+	    EncryptJS.prototype.getUrl = function(dataToEncrypt){
+	        if(dataToEncrypt === undefined || dataToEncrypt.trim().length === 0){
+	            // Assigns default empty format
+	            dataToEncrypt = ' ';
+	        }
+	        // return encoded URL
+	        return self.endpoint+encodeURIComponent(self.Encrypt(dataToEncrypt));
+	    }
 
-	    // Builds initial empty url
-	    target.prop('href',self.endpoint+encodeURIComponent(self.Encrypt('||')));
-	    // ------------------------------------------------
-	    // Bindings
-	    // ------------------------------------------------
-	    formInputs.on('blur, change', function(){
-	        var formData = [];
-	        $.each(formInputs.toArray(), function(index, value){
-	            formData.push($(value).val());
-	        });
-	        var encodedURL = encodeURIComponent(self.Encrypt(formData.join('|')));
-	        target.prop('href',self.endpoint+encodedURL);
-	    });
-	}
-
-	exports.EncryptForm = EncryptForm;
-
+	    var self = new EncryptJS();
+	    return self.getUrl;
+	})();
 
 
 /***/ }
