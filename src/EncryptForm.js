@@ -60,11 +60,13 @@ EncryptForm.prototype.init = function(){
         target = $(this.formSelector+ ' [data-target="true"]');
         self = this;
     formInputs.on('blur, change', function(){
-        var formData = [];
+        var formData = {};
         $.each(formInputs.toArray(), function(index, value){
-            formData.push($(value).val());
+            value = $(value);
+            formData[value.prop('id')] = value.val();
         });
-        var encodedURL = encodeURIComponent(self.Encrypt(formData.join('|')));
+        console.dir(formData);
+        var encodedURL = encodeURIComponent(self.Encrypt(JSON.stringify(formData)));
         target.prop('href',self.domain+encodedURL);
     });
 }
