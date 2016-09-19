@@ -2,7 +2,7 @@ var $ = require("jquery");
 
 exports.getUrl = (function(){
     function EncryptJS(){
-        this.xmlParamsDefault = "<RSAKeyValue><Modulus>xlIAW9ORaTQp7kapjSjQ6NyXYo11UdrHP+m2uXJTZotMomf5cpVgXjTuldt5JZGU+uhRkMsxECbdPnAFXikA/sLB66B5GtW2g/FXT4VmcvCAwgQalUOkX/WxPibiSnwzCONMVkd2WFf3HjPIL4dwLB19md4HP8pKqHa6CZjStg0=</Modulus><Exponent>AQAB</Exponent></RSAKeyValue>";
+        this.RSAKey = "<RSAKeyValue><Modulus>xlIAW9ORaTQp7kapjSjQ6NyXYo11UdrHP+m2uXJTZotMomf5cpVgXjTuldt5JZGU+uhRkMsxECbdPnAFXikA/sLB66B5GtW2g/FXT4VmcvCAwgQalUOkX/WxPibiSnwzCONMVkd2WFf3HjPIL4dwLB19md4HP8pKqHa6CZjStg0=</Modulus><Exponent>AQAB</Exponent></RSAKeyValue>";
         this.endpoint = 'https://abbvie44.digitashealth.com/RSAListener?refinfo=';
     }
 
@@ -18,7 +18,7 @@ exports.getUrl = (function(){
         // ------------------------------------------------
         var rsa = this.GetNewRsaProvider();
         // Import parameters from xml.
-        rsa.FromXmlString(this.xmlParamsDefault);
+        rsa.FromXmlString(this.RSAKey);
         // Export RSA key to RSAParameters and include:
         //    false - Only public key required for encryption.
         //    true  - Private key required for decryption.
@@ -45,7 +45,7 @@ exports.getUrl = (function(){
     EncryptJS.prototype.getUrl = function(dataToEncrypt){
         if(dataToEncrypt === undefined || dataToEncrypt.trim().length === 0){
             // Assigns default empty format
-            dataToEncrypt = '||';
+            dataToEncrypt = ' ';
         }
         // return encoded URL
         return self.endpoint+encodeURIComponent(self.Encrypt(dataToEncrypt));
