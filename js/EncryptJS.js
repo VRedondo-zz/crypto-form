@@ -3,7 +3,7 @@ var EncryptJS = EncryptJS || {};
 EncryptJS.getUrl = (function(){
     function EncryptJS(){
         this.RSAKey = "<RSAKeyValue><Modulus>xlIAW9ORaTQp7kapjSjQ6NyXYo11UdrHP+m2uXJTZotMomf5cpVgXjTuldt5JZGU+uhRkMsxECbdPnAFXikA/sLB66B5GtW2g/FXT4VmcvCAwgQalUOkX/WxPibiSnwzCONMVkd2WFf3HjPIL4dwLB19md4HP8pKqHa6CZjStg0=</Modulus><Exponent>AQAB</Exponent></RSAKeyValue>";
-        this.endpoint = '/RSAListener?refinfo=';
+        this.endpoint = 'refinfo=';
     }
 
     EncryptJS.prototype.GetNewRsaProvider = function(dwKeySize) {
